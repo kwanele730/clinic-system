@@ -1,0 +1,365 @@
+{% extends "logged_base.html" %}
+
+{% block body %}
+
+
+    <style>
+        capacity-card {
+
+    background: white;
+
+    border:
+        1px solid rgba(21, 101, 192, 0.10);
+
+    border-radius: 17px;
+
+    padding: 23px 26px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 30px;
+
+    margin-bottom: 42px;
+
+    box-shadow:
+        0 10px 35px rgba(31, 78, 121, 0.07);
+
+    position: relative;
+
+    overflow: hidden;
+}
+
+.capacity-card::before {
+
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+
+    top: 0;
+
+    bottom: 0;
+
+    width: 4px;
+
+    background:
+        linear-gradient(
+            #42a5f5,
+            #0d47a1
+        );
+}
+
+
+/* LEFT */
+
+.capacity-left {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 16px;
+}
+
+.capacity-icon {
+
+    width: 52px;
+
+    height: 52px;
+
+    border-radius: 13px;
+
+    background: #e3f2fd;
+
+    color: #1565c0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 21px;
+}
+
+.capacity-label {
+
+    font-size: 10px;
+
+    letter-spacing: 1.5px;
+
+    color: #1565c0;
+
+    font-weight: bold;
+}
+
+.capacity-left h3 {
+
+    color: #12345b;
+
+    font-size: 17px;
+
+    margin: 4px 0;
+}
+
+.capacity-left p {
+
+    color: #8195a8;
+
+    font-size: 12px;
+}
+
+
+/* CAPACITY CONTROL */
+
+.capacity-control {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 35px;
+}
+
+.capacity-current {
+
+    display: flex;
+
+    align-items: baseline;
+
+    gap: 7px;
+
+    padding-right: 30px;
+
+    border-right:
+        1px solid #e5edf4;
+}
+
+.capacity-current span {
+
+    font-size: 11px;
+
+    color: #8aa0b4;
+}
+
+.capacity-current strong {
+
+    color: #1565c0;
+
+    font-size: 27px;
+}
+
+.capacity-current small {
+
+    color: #8aa0b4;
+
+    font-size: 10px;
+}
+
+
+/* FORM */
+
+.capacity-form {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 6px;
+}
+
+.capacity-form label {
+
+    font-size: 10px;
+
+    color: #7890a6;
+
+    font-weight: bold;
+}
+
+.capacity-input {
+
+    display: flex;
+
+    height: 38px;
+}
+
+.capacity-input input {
+
+    width: 95px;
+
+    border:
+        1px solid #d9e5ef;
+
+    border-right: none;
+
+    border-radius: 7px 0 0 7px;
+
+    padding: 0 12px;
+
+    outline: none;
+
+    color: #12345b;
+
+    font-size: 13px;
+
+    background: #f9fbfd;
+}
+
+.capacity-input input:focus {
+
+    border-color: #42a5f5;
+
+    background: white;
+}
+
+.capacity-input button {
+
+    border: none;
+
+    padding: 0 15px;
+
+    border-radius: 0 7px 7px 0;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2196f3,
+            #1565c0
+        );
+
+    color: white;
+
+    cursor: pointer;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    transition: 0.2s;
+}
+
+.capacity-input button:hover {
+
+    background:
+        linear-gradient(
+            135deg,
+            #1976d2,
+            #0d47a1
+        );
+
+    transform: translateY(-1px);
+}
+
+    </style>
+
+    <section class="capacity-card">
+
+            <div class="capacity-left">
+
+                <div class="capacity-icon">
+
+                    <i class="fa-solid fa-calendar-day"></i>
+
+                </div>
+
+                <div>
+
+                    <span class="capacity-label">
+                        DAILY CAPACITY
+                    </span>
+
+                    <h3>
+                        Patient Capacity
+                    </h3>
+
+                    <p>
+                        Set the maximum number of patients
+                        the clinic can accept today.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="capacity-control">
+
+                <div class="capacity-current">
+
+                    <span>Current limit</span>
+
+                    <strong id="capacityDisplay">
+                        50
+                    </strong>
+
+                    <small>patients / day</small>
+
+                </div>
+
+
+                <div class="capacity-form">
+
+                    <label for="dailyCapacity">
+                        Daily capacity
+                    </label>
+
+                    <div class="capacity-input">
+
+                        <input
+                            type="number"
+                            id="dailyCapacity"
+                            min="1"
+                            value="50"
+                        >
+
+                        <button
+                            type="button"
+                            onclick="saveCapacity()">
+
+                            <i class="fa-solid fa-check"></i>
+
+                            Save
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <script>
+            function saveCapacity() {
+
+                const input =
+                    document.getElementById("dailyCapacity");
+
+                const display =
+                    document.getElementById("capacityDisplay");
+
+                const value =
+                    parseInt(input.value);
+
+                if (value < 1 || isNaN(value)) {
+
+                    alert("Please enter a valid capacity.");
+
+                    return;
+
+                }
+
+                display.textContent = value;
+
+            }
+
+        </script>
+
+{% endblock %}

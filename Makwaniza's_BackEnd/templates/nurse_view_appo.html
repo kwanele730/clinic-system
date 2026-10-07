@@ -1,0 +1,556 @@
+
+{% extends "nurse_dashboard.html" %}
+
+{% block title %}
+    Manage Appointments
+{% endblock %}
+
+{% block extra_css %}
+
+<style>
+
+    .appointments-container {
+        width: 100%;
+    }
+
+    .appointments-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+    }
+
+    .appointments-header h1 {
+        color: #002b5c;
+        font-size: 28px;
+        margin-bottom: 5px;
+    }
+
+    .appointments-header p {
+        color: #777;
+        font-size: 14px;
+    }
+
+    .appointment-count {
+        background-color: #ffd700;
+        color: #002b5c;
+        padding: 10px 18px;
+        border-radius: 8px;
+        font-weight: bold;
+        font-size: 14px;
+    }
+
+    /* TABLE CARD */
+
+    .table-card {
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 18px rgba(0, 43, 92, 0.12);
+        overflow: hidden;
+        border: 1px solid #eeeeee;
+    }
+
+    .table-top {
+        padding: 20px 22px;
+        background-color: #002b5c;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .table-top h2 {
+        color: white;
+        font-size: 18px;
+    }
+
+    .table-top span {
+        color: #ffd700;
+        font-size: 13px;
+    }
+
+    .table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 1050px;
+    }
+
+    thead {
+        background-color: #f5f7fa;
+    }
+
+    th {
+        text-align: left;
+        padding: 15px;
+        font-size: 13px;
+        color: #002b5c;
+        font-weight: bold;
+        border-bottom: 2px solid #ffd700;
+        white-space: nowrap;
+    }
+
+    td {
+        padding: 15px;
+        font-size: 13px;
+        color: #444;
+        border-bottom: 1px solid #eeeeee;
+        vertical-align: middle;
+    }
+
+    tbody tr {
+        transition: 0.2s;
+    }
+
+    tbody tr:hover {
+        background-color: #fafcff;
+    }
+
+    /* PATIENT */
+
+    .patient-name {
+        font-weight: bold;
+        color: #002b5c;
+    }
+
+    .patient-id {
+        font-size: 11px;
+        color: #888;
+        margin-top: 3px;
+    }
+
+    /* STATUS */
+
+    .status-select {
+        padding: 8px 30px 8px 10px;
+        border-radius: 6px;
+        border: 1px solid #d8d8d8;
+        font-size: 12px;
+        font-weight: bold;
+        color: #002b5c;
+        background-color: white;
+        cursor: pointer;
+        outline: none;
+    }
+
+    .status-select:focus {
+        border-color: #ffd700;
+        box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.2);
+    }
+
+    /* ACTION BUTTONS */
+
+    .actions {
+        display: flex;
+        gap: 8px;
+    }
+
+    .btn {
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        padding: 8px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: bold;
+        transition: 0.2s;
+    }
+
+    .update-btn {
+        background-color: #002b5c;
+        color: white;
+    }
+
+    .update-btn:hover {
+        background-color: #00417f;
+    }
+
+    .delete-btn {
+        background-color: #d9534f;
+        color: white;
+    }
+
+    .delete-btn:hover {
+        background-color: #b52b27;
+    }
+
+    /* EMPTY TABLE */
+
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+    }
+
+    .empty-icon {
+        width: 65px;
+        height: 65px;
+        margin: 0 auto 15px;
+        border-radius: 50%;
+        background-color: #fff4b3;
+        color: #002b5c;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 28px;
+    }
+
+    .empty-state h3 {
+        color: #002b5c;
+        margin-bottom: 8px;
+    }
+
+    .empty-state p {
+        color: #777;
+        font-size: 14px;
+    }
+
+
+    .view_btn {
+
+        background-color: #eef5fa;
+
+        color: #064a7b;
+
+        border: 1px solid #d5e5f0 !important;
+
+        text-decoration: none;
+    }
+
+
+    .view_btn:hover {
+
+        background-color: #dceef9;
+    }
+
+    /* RESPONSIVE */
+
+    @media (max-width: 700px) {
+
+        .appointments-header {
+            align-items: flex-start;
+            gap: 15px;
+            flex-direction: column;
+        }
+
+        .appointments-header h1 {
+            font-size: 23px;
+        }
+
+        .appointment-count {
+            align-self: flex-start;
+        }
+    }
+
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="appointments-container">
+
+    <!-- PAGE HEADER -->
+
+    <div class="appointments-header">
+
+        <div>
+            <h1>Manage Appointments</h1>
+
+            <p>
+                View and manage patient appointment requests.
+            </p>
+        </div>
+
+        <div class="appointment-count">
+            {{ appointments|length }} Appointments
+        </div>
+
+    </div>
+
+
+    <!-- TABLE -->
+
+    <div class="table-card">
+
+        <div class="table-top">
+
+            <h2>Patient Appointments</h2>
+
+            <span>
+                Appointment Management
+            </span>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            {% if appointments %}
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Que_No</th>
+
+                        <th>Patient</th>
+
+                        <th>Email</th>
+
+                        <th>Phone Number</th>
+
+                        <th>Reason</th>
+
+                        <th>Date Created</th>
+
+                        <th>Status</th>
+
+                        <th>Actions</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for appointment in appointments %}
+
+                    <tr>
+
+                        <!-- ID -->
+
+                        <td>
+                            #{{ appointment.id }}
+                        </td>
+
+
+                        <!-- PATIENT -->
+
+                        <td>
+
+                            <div class="patient-name">
+
+                                {{ appointment.name }}
+                                {{ appointment.surname }}
+
+                            </div>
+
+                            {% if appointment.patient_id %}
+
+                            <div class="patient-id">
+
+                                Patient ID:
+                                {{ appointment.patient_id }}
+
+                            </div>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- EMAIL -->
+
+                        <td>
+
+                            {{ appointment.email }}
+
+                        </td>
+
+
+                        <!-- PHONE -->
+
+                        <td>
+
+                            {{ appointment.phone_no }}
+
+                        </td>
+
+
+                        <!-- REASON -->
+
+                        <td>
+
+                            {{ appointment.reason }}
+
+                        </td>
+
+
+                        <!-- DATE -->
+
+                        <td>
+
+                            {% if appointment.date_created %}
+
+                                {{ appointment.date_created.strftime('%d %b %Y') }}
+
+                                <br>
+
+                                <small>
+                                    {{ appointment.date_created.strftime('%H:%M') }}
+                                </small>
+
+                            {% else %}
+
+                                N/A
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- STATUS -->
+
+                        <td>
+
+                            <form
+                                method="POST"
+                                action="{{ url_for('nurse_update_appointment_status', appointment_id=appointment.id) }}"
+                            >
+
+                                <select
+                                    name="status"
+                                    class="status-select"
+                                    onchange="this.form.submit()"
+                                >
+
+                                    <option
+                                        value="Pending"
+                                        {% if appointment.status == "Pending" %}
+                                        selected
+                                        {% endif %}
+                                    >
+                                        Pending
+                                    </option>
+
+                                    <option
+                                        value="inprogress"
+                                        {% if appointment.status == "inprogress" %}
+                                        selected
+                                        {% endif %}
+                                    >
+                                        inprogress
+                                    </option>
+
+                                    <option
+                                        value="Confirmed"
+                                        {% if appointment.status == "Confirmed" %}
+                                        selected
+                                        {% endif %}
+                                    >
+                                        Confirmed
+                                    </option>
+
+                                    <option
+                                        value="assessed"
+                                        {% if appointment.status == "assessed" %}
+                                        selected
+                                        {% endif %}
+                                    >
+                                        assessed
+                                    </option>
+
+                                    
+
+                                    <option
+                                        value="Cancelled"
+                                        {% if appointment.status == "Cancelled" %}
+                                        selected
+                                        {% endif %}
+                                    >
+                                        Cancelled
+                                    </option>
+
+                                    <option
+                                        value="Rescheduled"
+                                        {% if appointment.status == "Rescheduled" %}
+                                        selected
+                                        {% endif %}
+                                    >
+                                        Rescheduled
+                                    </option>
+
+                                </select>
+
+                            </form>
+
+                        </td>
+
+
+                        <!-- ACTIONS -->
+
+                        <td>
+
+                            <div class="actions">
+
+                                <form
+                                    method="POST"
+                                    action="{{ url_for('nurse_delete_appointment', appointment_id=appointment.id) }}"
+                                    onsubmit="return confirm('Are you sure you want to delete this appointment?');"
+                                >
+
+                                    <button
+                                        type="submit"
+                                        class="btn delete-btn"
+                                    >
+                                        Delete
+                                    </button>
+
+                                    <a
+                                        href="{{url_for('nurse_view_details', appointment_id=appointment.id)}}"
+                                        class="view_btn">
+
+                                        View
+
+                                    </a>
+
+                                </form>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+
+            {% else %}
+
+            <!-- EMPTY STATE -->
+
+            <div class="empty-state">
+
+                <div class="empty-icon">
+                    📅
+                </div>
+
+                <h3>No Appointments</h3>
+
+                <p>
+                    There are currently no patient appointments to display.
+                </p>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+

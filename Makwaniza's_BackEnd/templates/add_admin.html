@@ -1,0 +1,226 @@
+```html
+{% extends "logged_base.html" %}
+
+{% block body %}
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    .admin-register-container {
+        min-height: calc(100vh - 70px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #14284b;
+        padding: 40px 20px;
+    }
+
+    .register-card {
+        width: 100%;
+        max-width: 500px;
+        background: white;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    }
+
+    .register-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .register-header h1 {
+        margin: 0;
+        color: #14284b;
+        font-size: 28px;
+    }
+
+    .register-header p {
+        margin-top: 8px;
+        color: #777;
+        font-size: 14px;
+    }
+
+    .form-group {
+        margin-bottom: 18px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 7px;
+        color: #14284b;
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    .form-group input {
+        width: 100%;
+        height: 48px;
+        padding: 0 14px;
+        border: 1px solid #d5dbe5;
+        border-radius: 8px;
+        outline: none;
+        font-size: 15px;
+        transition: 0.3s;
+    }
+
+    .form-group input:focus {
+        border-color: #14284b;
+        box-shadow: 0 0 0 3px rgba(20, 40, 75, 0.12);
+    }
+
+    .register-btn {
+        width: 100%;
+        height: 50px;
+        margin-top: 10px;
+        border: none;
+        border-radius: 8px;
+        background: #14284b;
+        color: white;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .register-btn:hover {
+        background: #1d3a6b;
+        transform: translateY(-1px);
+    }
+
+    .flash-container {
+        margin-top: 20px;
+    }
+
+    .flash-message {
+        padding: 12px 15px;
+        border-radius: 7px;
+        margin-bottom: 10px;
+        text-align: center;
+        font-size: 14px;
+    }
+
+    .flash-message.success {
+        background: #dff5e5;
+        color: #176b2c;
+        border: 1px solid #a9dfb7;
+    }
+
+    .flash-message.error {
+        background: #fde2e2;
+        color: #a51d1d;
+        border: 1px solid #f2b5b5;
+    }
+
+    .flash-message.warning {
+        background: #fff3cd;
+        color: #856404;
+        border: 1px solid #ffe69c;
+    }
+
+    @media (max-width: 600px) {
+        .admin-register-container {
+            padding: 25px 15px;
+        }
+
+        .register-card {
+            padding: 28px 22px;
+        }
+
+        .register-header h1 {
+            font-size: 24px;
+        }
+    }
+</style>
+
+<div class="admin-register-container">
+
+    <div class="register-card">
+
+        <div class="register-header">
+            <h1>Register Administrator</h1>
+            <p>Create a new administrator account</p>
+        </div>
+
+        <form action="{{ url_for('addAdminDetails') }}" method="post">
+
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="Enter your name"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="surname">Surname</label>
+                <input
+                    type="text"
+                    id="surname"
+                    name="surname"
+                    placeholder="Enter your surname"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Enter your email"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Enter your password"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="phone_no">Phone Number</label>
+                <input
+                    type="tel"
+                    id="phone_no"
+                    name="phone_no"
+                    placeholder="Enter your phone number"
+                    required
+                >
+            </div>
+
+            <button type="submit" class="register-btn">
+                Create Administrator
+            </button>
+
+        </form>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-container">
+                    {% for category, message in messages %}
+                        <div class="flash-message {{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+    </div>
+
+</div>
+
+{% endblock %}

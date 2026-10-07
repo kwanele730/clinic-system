@@ -1,0 +1,297 @@
+
+{% extends "logged_base.html" %}
+
+{% block body %}
+
+<style>
+
+    .appointment-container {
+        width: 90%;
+        max-width: 700px;
+        margin: 40px auto;
+        background: #ffffff;
+        padding: 35px 40px;
+        border-radius: 12px;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+        border: 1px solid #e3eaf1;
+    }
+
+    .appointment-container h1 {
+        text-align: center;
+        color: #123b63;
+        font-size: 28px;
+        margin-bottom: 8px;
+    }
+
+    .appointment-description {
+        text-align: center;
+        color: #6b7280;
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+    /* Form */
+
+    .appointment-form {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-group label {
+        font-size: 14px;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 7px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        width: 100%;
+        padding: 12px 14px;
+        border: 1px solid #ccd6e0;
+        border-radius: 7px;
+        font-size: 14px;
+        font-family: Arial, sans-serif;
+        box-sizing: border-box;
+        outline: none;
+        transition: 0.2s;
+    }
+
+    .form-group input {
+        height: 45px;
+    }
+
+    .form-group textarea {
+        min-height: 110px;
+        resize: vertical;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+        border-color: #1769aa;
+        box-shadow: 0 0 0 2px rgba(23, 105, 170, 0.10);
+    }
+
+    /* Book button */
+
+    .book-button {
+        width: 100%;
+        padding: 13px;
+        margin-top: 5px;
+        border: none;
+        border-radius: 7px;
+        background: #1769aa;
+        color: white;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .book-button:hover {
+        background: #0e4f82;
+    }
+
+    /* Flash messages */
+
+    .flash-message {
+        margin-top: 20px;
+        padding: 13px 15px;
+        border-radius: 7px;
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    .flash-message.success {
+        background: #e8f7ee;
+        color: #146c43;
+        border: 1px solid #b7e4c7;
+    }
+
+    .flash-message.error,
+    .flash-message.danger {
+        background: #fdecec;
+        color: #b42318;
+        border: 1px solid #f5c2c0;
+    }
+
+    .flash-message.warning {
+        background: #fff8e1;
+        color: #856404;
+        border: 1px solid #ffe69c;
+    }
+
+    .flash-message.info {
+        background: #e8f1fa;
+        color: #1769aa;
+        border: 1px solid #b6d4fe;
+    }
+
+    /* Mobile */
+
+    @media (max-width: 600px) {
+
+        .appointment-container {
+            width: 90%;
+            padding: 25px 20px;
+            margin: 25px auto;
+        }
+
+        .appointment-container h1 {
+            font-size: 24px;
+        }
+
+    }
+
+</style>
+
+
+<div class="appointment-container">
+
+    <h1>Edit Appointment</h1>
+
+    <p class="appointment-description">
+        You can edit the appointment below.
+    </p>
+
+
+    <form
+        action="{{ url_for('edit_appointment', appointment_id=appointment.id) }}"
+        method="post"
+        class="appointment-form"
+        
+    >
+
+        <!-- Name -->
+        <div class="form-group">
+
+            <label for="name">
+                First Name
+            </label>
+
+            <input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="Enter your name"
+                required
+                value="{{appointment.name}}"
+            >
+
+        </div>
+
+
+        <!-- Surname -->
+        <div class="form-group">
+
+            <label for="surname">
+                Surname
+            </label>
+
+            <input
+                type="text"
+                id="surname"
+                name="surname"
+                placeholder="Enter your surname"
+                required
+                value="{{appointment.surname}}"
+            >
+
+        </div>
+
+
+        <!-- Email -->
+        <div class="form-group">
+
+            <label for="email">
+                Email Address
+            </label>
+
+            <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Enter your email address"
+                required
+                value="{{appointment.email}}"
+            >
+
+        </div>
+
+
+        <!-- Phone -->
+        <div class="form-group">
+
+            <label for="phone_no">
+                Phone Number
+            </label>
+
+            <input
+                type="tel"
+                id="phone_no"
+                name="phone_no"
+                placeholder="Enter your phone number"
+                required
+                value="{{appointment.phone_no}}"
+            >
+
+        </div>
+
+
+        <!-- Reason -->
+        <div class="form-group">
+
+            <label for="reason">
+                Reason for Appointment
+            </label>
+
+            <textarea
+                id="reason"
+                name="reason"
+                placeholder="Briefly describe the reason for your appointment"
+                required
+                
+            >{{ appointment.reason }}</textarea>
+
+        </div>
+
+
+        <!-- Submit -->
+        <button
+            type="submit"
+            class="book-button"
+        >
+            Edit Appointment
+        </button>
+
+    </form>
+
+
+    <!-- Flash Messages -->
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+
+        {% if messages %}
+
+            {% for category, message in messages %}
+
+                <div class="flash-message {{ category }}">
+                    {{ message }}
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+    {% endwith %}
+
+</div>
+
+{% endblock %}
+

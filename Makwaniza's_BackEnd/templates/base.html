@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}Home{% endblock %}</title>
+
+    <style>
+        /* Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body */
+        body {
+            /* font-family: Arial, Helvetica, sans-serif; */
+            background-color: #f1f3f5;
+            color: #333;
+            min-height: 100vh;
+        }
+
+        /* Navigation Bar */
+        nav {
+            background-color: #002b5c;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            padding: 0 40px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Administrator heading */
+        nav h1 {
+            color: #ffd700;
+            /* font-size: 25px; */
+            margin-right: auto;
+        }
+
+        /* Navigation links */
+        nav a {
+            color: #ffd700;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+            margin-left: 30px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        /* Hover effect */
+        nav a:hover {
+            background-color: #ffd700;
+            color: #002b5c;
+        }
+
+        
+
+
+    </style>
+</head>
+
+<body >
+
+    <nav>
+        <h1>Administrator</h1>
+
+        <a href="{{ url_for('index') }}">Home</a>
+        <a href="{{ url_for('signin') }}">Sign In</a>
+    </nav>
+
+    {% block body %}
+
+    {% endblock %}
+
+</body>
+</html>

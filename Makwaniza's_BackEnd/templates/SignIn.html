@@ -1,0 +1,139 @@
+
+{% extends "base.html" %}
+
+{% block body %}
+
+<style>
+
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: #f4f8fc;
+    }
+
+    .login_container {
+        width: 400px;
+        padding: 40px;
+        background: white;
+
+        /* Center the login box */
+        margin: 100px auto;
+
+        border-radius: 15px;
+
+        /* Professional shadow */
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+
+        text-align: center;
+    }
+
+    .login_container h1 {
+        margin-bottom: 30px;
+        color: #064a7b;
+        font-size: 28px;
+    }
+
+    .login_container input {
+        width: 100%;
+        box-sizing: border-box;
+
+        padding: 14px;
+        margin-bottom: 20px;
+
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+
+        font-size: 15px;
+        outline: none;
+
+        transition: 0.3s;
+    }
+
+    .login_container input:focus {
+        border-color: #0876c9;
+        box-shadow: 0 0 5px rgba(8, 118, 201, 0.25);
+    }
+
+    .login_container input::placeholder {
+        color: #888;
+    }
+
+    .login_btn {
+        width: 100%;
+        padding: 14px;
+
+        background: #0876c9;
+        color: white;
+
+        border: none;
+        border-radius: 8px;
+
+        font-size: 16px;
+        font-weight: bold;
+
+        cursor: pointer;
+
+        transition: 0.3s;
+    }
+
+    .login_btn:hover {
+        background: #064a7b;
+    }
+
+    .login_footer {
+        margin-top: 20px;
+        font-size: 14px;
+        color: #777;
+    }
+
+    /* Mobile responsive */
+    @media (max-width: 500px) {
+
+        .login_container {
+            width: 85%;
+            padding: 30px 20px;
+            margin: 70px auto;
+        }
+
+        .login_container h1 {
+            font-size: 24px;
+        }
+    }
+
+</style>
+
+
+<div class="login_container">
+
+    <h1>Administrator Login</h1>
+
+    <form action="{{url_for('SignIn')}}" method="POST">
+
+        <input 
+            placeholder="Enter your email"
+            type="email"
+            required
+            name="email">
+
+        <input 
+            type="password"
+            placeholder="Enter your password"
+            required
+            name="password">
+
+        <button type="submit" class="login_btn">
+            Login
+        </button>
+
+    </form>
+
+
+    <div class="login_footer">
+        KwaDlangezwa Clinic Administration System
+    </div>
+
+</div>
+
+{% endblock %}
+

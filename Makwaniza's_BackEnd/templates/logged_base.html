@@ -1,0 +1,720 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>KwaDlangezwa Clinic Administration</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f4f8fc;
+            color: #333;
+        }
+
+
+        /* =========================
+           TOP NAVBAR
+        ========================= */
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+
+            width: 100%;
+            height: 70px;
+
+            background-color: #064a7b;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 25px;
+
+            z-index: 1000;
+
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+        }
+
+
+        /* LEFT SIDE OF NAVBAR */
+
+        .navbar_left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+
+        /* MENU BUTTON */
+
+        .menu_button {
+            background: none;
+            border: none;
+
+            color: white;
+
+            font-size: 28px;
+
+            cursor: pointer;
+
+            width: 40px;
+            height: 40px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 6px;
+
+            transition: 0.3s;
+        }
+
+        .menu_button:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+
+        /* CLINIC NAME */
+
+        .clinic_name {
+            color: white;
+
+            font-size: 21px;
+
+            font-weight: bold;
+        }
+
+
+        /* =========================
+           PROFILE
+        ========================= */
+
+        .profile_area {
+            position: relative;
+        }
+
+
+        .profile_button {
+            display: flex;
+            align-items: center;
+
+            gap: 10px;
+
+            background: none;
+            border: none;
+
+            color: white;
+
+            cursor: pointer;
+
+            padding: 6px 10px;
+
+            border-radius: 8px;
+
+            transition: 0.3s;
+        }
+
+        .profile_button:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+
+        /* PROFILE IMAGE */
+
+        .profile_picture {
+            width: 42px;
+            height: 42px;
+
+            border-radius: 50%;
+
+            object-fit: cover;
+
+            border: 2px solid white;
+
+            background-color: white;
+        }
+
+
+        .profile_name {
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+
+        .arrow {
+            font-size: 12px;
+        }
+
+
+        /* PROFILE DROPDOWN */
+
+        .profile_dropdown {
+            display: none;
+
+            position: absolute;
+
+            top: 58px;
+            right: 0;
+
+            width: 220px;
+
+            background-color: white;
+
+            border-radius: 8px;
+
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.18);
+
+            overflow: hidden;
+
+            z-index: 2000;
+        }
+
+
+        .profile_dropdown.show {
+            display: block;
+        }
+
+
+        .profile_info {
+            padding: 18px;
+
+            border-bottom: 1px solid #eeeeee;
+
+            text-align: center;
+        }
+
+
+        .profile_info img {
+            width: 65px;
+            height: 65px;
+
+            border-radius: 50%;
+
+            object-fit: cover;
+
+            margin-bottom: 8px;
+        }
+
+
+        .profile_info h4 {
+            color: #064a7b;
+
+            margin-bottom: 4px;
+        }
+
+
+        .profile_info p {
+            font-size: 13px;
+
+            color: #777;
+        }
+
+
+        .profile_dropdown a {
+            display: block;
+
+            padding: 13px 18px;
+
+            text-decoration: none;
+
+            color: #333;
+
+            font-size: 14px;
+        }
+
+
+        .profile_dropdown a:hover {
+            background-color: #f1f7fc;
+
+            color: #064a7b;
+        }
+
+
+        .sidebar {
+
+            position: fixed;
+
+            top: 70px;
+            left: 0;
+
+            width: 250px;
+
+            height: calc(100vh - 70px);
+
+            background-color: white;
+
+            box-shadow: 3px 0 10px rgba(0, 0, 0, 0.08);
+
+            display: flex;
+
+            flex-direction: column;
+
+            transition: 0.3s;
+
+            z-index: 900;
+        }
+
+
+        /* CLOSED SIDEBAR */
+
+        .sidebar.closed {
+            width: 0;
+
+            overflow: hidden;
+        }
+
+
+        /* SIDEBAR HEADER */
+
+        .sidebar_header {
+
+            padding: 25px 20px 15px;
+
+            color: #064a7b;
+
+            font-size: 13px;
+
+            font-weight: bold;
+
+            text-transform: uppercase;
+
+            border-bottom: 1px solid #eeeeee;
+        }
+
+
+        /* SIDEBAR LINKS */
+
+        .sidebar_links {
+
+            padding-top: 10px;
+
+            flex: 1;
+        }
+
+
+        .sidebar_links a {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 15px;
+
+            padding: 15px 20px;
+
+            color: #444;
+
+            text-decoration: none;
+
+            font-size: 15px;
+
+            transition: 0.3s;
+
+            border-left: 4px solid transparent;
+        }
+
+
+        .sidebar_links a:hover {
+
+            background-color: #edf6fc;
+
+            color: #064a7b;
+
+            border-left: 4px solid #0876c9;
+        }
+
+
+        .sidebar_icon {
+
+            width: 25px;
+
+            font-size: 18px;
+
+            text-align: center;
+        }
+
+
+        .sidebar_logout {
+
+            padding: 15px;
+
+            border-top: 1px solid #eeeeee;
+        }
+
+
+        .sidebar_logout a {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 10px;
+
+            padding: 12px;
+
+            background-color: #e74c3c;
+
+            color: white;
+
+            text-decoration: none;
+
+            border-radius: 7px;
+
+            font-weight: bold;
+
+            font-size: 14px;
+
+            transition: 0.3s;
+        }
+
+
+        .sidebar_logout a:hover {
+
+            background-color: #c0392b;
+        }
+
+
+        .main_content {
+
+            margin-left: 250px;
+
+            padding: 100px 30px 30px;
+
+            min-height: 100vh;
+
+            transition: 0.3s;
+        }
+
+
+
+        .main_content.expanded {
+
+            margin-left: 0;
+        }
+
+
+        @media (max-width: 700px) {
+
+            .clinic_name {
+                font-size: 16px;
+            }
+
+            .profile_name {
+                display: none;
+            }
+
+            .sidebar {
+                width: 230px;
+            }
+
+            .main_content {
+                margin-left: 0;
+            }
+
+            .main_content.expanded {
+                margin-left: 0;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+
+    <nav class="navbar">
+
+
+        <div class="navbar_left">
+
+            <button
+                class="menu_button"
+                onclick="toggleSidebar()">
+
+                ☰
+
+            </button>
+
+
+            <div class="clinic_name">
+
+                KwaDlangezwa Clinic Administration
+
+            </div>
+
+        </div>
+
+
+        <div class="profile_area">
+
+
+            <button
+                class="profile_button"
+                onclick="toggleProfile()">
+
+
+                <!--
+                    CHANGE THIS IMAGE
+                    TO YOUR ADMIN PROFILE PICTURE
+
+                    Example:
+                    /static/profile.jpg
+                -->
+
+                <img
+                    src="#"
+                    class="profile_picture"
+                    alt="Administrator Profile">
+
+
+                <span class="profile_name">
+
+                    Administrator
+
+                </span>
+
+
+                <span class="arrow">
+
+                    ▼
+
+                </span>
+
+
+            </button>
+
+
+            <!-- PROFILE DROPDOWN -->
+n deleted s
+            <div
+                class="profile_dropdown"
+                id="profileDropdown">
+
+
+                <!-- <div class="profile_info">
+
+
+                    <img
+                        src="#"
+                        alt="Profile Picture">
+
+
+                    <h4>
+                        Administrator
+                    </h4>
+
+
+                    <p>
+                        Clinic Administrator
+                    </p>
+
+
+                </div> -->
+
+
+
+                <a href="#">
+                    👤 Change Profile
+                </a>
+
+
+                <a href="{{url_for('logout')}}">
+                    🚪 Logout
+                </a>
+
+
+            </div>
+
+        </div>
+
+    </nav>
+
+
+    <aside
+        class="sidebar"
+        id="sidebar">
+
+
+        <div class="sidebar_header">
+
+            Administration Menu
+
+        </div>
+
+
+        <div class="sidebar_links">
+
+
+            <a href="{{url_for('dashboard')}}">
+
+                <span class="sidebar_icon">
+                    📅
+                </span>
+
+                <span>
+                    Appointments
+                </span>
+
+            </a>
+
+
+
+            <a href="{{url_for('nurses')}}">
+
+                <span class="sidebar_icon">
+                    👩‍⚕️
+                </span>
+
+                <span>
+                    Nurses
+                </span>
+
+            </a>
+
+
+            <a href="{{url_for('Admins')}}">
+
+                <span class="sidebar_icon">
+                    👤
+                </span>
+
+                <span>
+                    Administrators
+                </span>
+
+            </a>
+
+
+            <a href="{{url_for('patients')}}">
+
+                <span class="sidebar_icon">
+                    🧑‍🤝‍🧑
+                </span>
+
+                <span>
+                    Patients
+                </span>
+
+            </a>
+
+
+            <a href="{{url_for('settings')}}">
+
+                <span class="sidebar_icon">
+                    ⚙️
+                </span>
+
+                <span>
+                    Settings
+                </span>
+
+            
+
+        </div>
+
+
+
+        <div class="sidebar_logout">
+
+            <a href="{{url_for('logout')}}">
+
+               
+                Logout
+
+            </a>
+
+        </div>
+
+
+    </aside>
+
+
+
+    <main
+        class="main_content"
+        id="mainContent">
+
+
+        {% block body %}
+
+        {% endblock %}
+
+
+    </main>
+    
+
+    <script>
+
+
+        function toggleSidebar() {
+
+            const sidebar =
+                document.getElementById("sidebar");
+
+            const mainContent =
+                document.getElementById("mainContent");
+
+
+            sidebar.classList.toggle("closed");
+
+            mainContent.classList.toggle("expanded");
+
+        }
+
+
+
+        function toggleProfile() {
+
+            const dropdown =
+                document.getElementById("profileDropdown");
+
+            dropdown.classList.toggle("show");
+
+        }
+
+
+
+        /* CLOSE PROFILE DROPDOWN
+           WHEN CLICKING OUTSIDE */
+
+        window.onclick = function(event) {
+
+            if (!event.target.closest(".profile_area")) {
+
+                document
+                    .getElementById("profileDropdown")
+                    .classList.remove("show");
+
+            }
+
+        };
+
+
+    </script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,417 @@
+
+{% extends "logged_base.html" %}
+
+{% block body %}
+
+<style>
+  
+
+    .appointment-page {
+        padding: 30px;
+        background: #f4f7fb;
+        min-height: calc(100vh - 70px);
+    }
+
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+    }
+
+    .page-header h2 {
+        margin: 0;
+        color: #123b63;
+        font-size: 26px;
+    }
+
+    .page-header p {
+        margin-top: 6px;
+        color: #6b7280;
+        font-size: 14px;
+    }
+
+    .back-btn {
+        text-decoration: none;
+        background: #ffffff;
+        color: #123b63;
+        border: 1px solid #d8e1eb;
+        padding: 10px 18px;
+        border-radius: 7px;
+        font-weight: 600;
+        transition: 0.2s;
+    }
+
+    .back-btn:hover {
+        background: #123b63;
+        color: white;
+    }
+
+
+    .appointment-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 25px;
+    }
+
+    .card {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+        border: 1px solid #e4eaf0;
+    }
+
+    .card h3 {
+        margin-top: 0;
+        margin-bottom: 22px;
+        color: #123b63;
+        font-size: 19px;
+        border-bottom: 1px solid #e7edf3;
+        padding-bottom: 15px;
+    }
+
+    /* Patient information */
+
+    .details-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    .detail-item {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .detail-item label {
+        font-size: 13px;
+        color: #718096;
+        font-weight: 600;
+    }
+
+    .detail-item h5 {
+        margin: 0;
+        color: #1f2937;
+        font-size: 15px;
+        font-weight: 500;
+    }
+
+    .reason-box {
+        grid-column: span 2;
+    }
+
+    .reason {
+        background: #f7f9fc;
+        padding: 12px;
+        border-radius: 7px;
+        color: #374151;
+        min-height: 45px;
+    }
+
+    .status-form {
+        margin-top: 5px;
+    }
+
+    .status-form label {
+        display: block;
+        color: #374151;
+        font-weight: 600;
+        font-size: 14px;
+        margin-bottom: 8px;
+    }
+
+    .status-form select {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccd6e0;
+        border-radius: 7px;
+        background: white;
+        font-size: 14px;
+        outline: none;
+    }
+
+    .status-form select:focus {
+        border-color: #1769aa;
+        box-shadow: 0 0 0 2px rgba(23, 105, 170, 0.1);
+    }
+
+    .update-btn {
+        width: 100%;
+        margin-top: 15px;
+        padding: 12px;
+        border: none;
+        border-radius: 7px;
+        background: #1769aa;
+        color: white;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .update-btn:hover {
+        background: #0e4f82;
+    }
+
+    .notification-card {
+        margin-top: 25px;
+    }
+
+    .notification-card textarea {
+        width: 100%;
+        min-height: 140px;
+        padding: 12px;
+        border: 1px solid #ccd6e0;
+        border-radius: 7px;
+        resize: vertical;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        box-sizing: border-box;
+        outline: none;
+    }
+
+    .notification-card textarea:focus {
+        border-color: #1769aa;
+        box-shadow: 0 0 0 2px rgba(23, 105, 170, 0.1);
+    }
+
+    .send-btn {
+        margin-top: 12px;
+        padding: 11px 20px;
+        border: none;
+        border-radius: 7px;
+        background: #198754;
+        color: white;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .send-btn:hover {
+        background: #146c43;
+    }
+
+
+    .current-status {
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 20px;
+        background: #e8f1fa;
+        color: #1769aa;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 18px;
+    }
+
+
+    @media (max-width: 850px) {
+
+        .appointment-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .details-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .reason-box {
+            grid-column: span 1;
+        }
+
+        .page-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
+        }
+    }
+
+</style>
+
+
+<div class="appointment-page">
+
+    <div class="page-header">
+
+        <div>
+            <h2>Appointment Details</h2>
+            <p>View and manage this patient's appointment.</p>
+        </div>
+
+        <a href="{{ url_for('dashboard') }}" class="back-btn">
+            ← Back to Appointments
+        </a>
+
+    </div>
+
+
+    <div class="appointment-grid">
+
+
+        <div class="card">
+
+            <h3>Patient Information</h3>
+
+            <div class="details-grid">
+
+                <div class="detail-item">
+                    <label>First Name</label>
+                    <h5>{{ appointment.name }}</h5>
+                </div>
+
+                <div class="detail-item">
+                    <label>Surname</label>
+                    <h5>{{ appointment.surname }}</h5>
+                </div>
+
+                <div class="detail-item">
+                    <label>Email Address</label>
+                    <h5>{{ appointment.email }}</h5>
+                </div>
+
+                <div class="detail-item">
+                    <label>Phone Number</label>
+                    <h5>{{ appointment.phone_no }}</h5>
+                </div>
+
+                <div class="detail-item">
+                    <label>Date of Booking</label>
+                    <h5>{{ appointment.date_created }}</h5>
+                </div>
+
+                <div class="detail-item">
+                    <label>Current Status</label>
+
+                    <span class="current-status">
+                        {{ appointment.status }}
+                    </span>
+
+                </div>
+
+                <div class="detail-item reason-box">
+
+                    <label>Reason for Appointment</label>
+
+                    <div class="reason">
+                        {{ appointment.reason }}
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ==========================
+             UPDATE STATUS
+             ========================== -->
+
+        <div class="card">
+
+            <h3>Change Status</h3>
+
+            <form
+                action="{{ url_for('update_appointment_status', appointment_id=appointment.id) }}"
+                method="POST"
+                class="status-form"
+            >
+
+                <label for="status">
+                    Appointment Status
+                </label>
+
+                <select name="status" id="status" required>
+
+                    <option value="Pending"
+                        {% if appointment.status == "Pending" %}selected{% endif %}>
+                        Pending
+                    </option>
+
+                    <option value="Confirmed"
+                        {% if appointment.status == "Confirmed" %}selected{% endif %}>
+                        Confirmed
+                    </option>
+
+                    <option value="Declined"
+                        {% if appointment.status == "Declined" %}selected{% endif %}>
+                        Declined
+                    </option>
+
+                    <option value="Rescheduled"
+                        {% if appointment.status == "Rescheduled" %}selected{% endif %}>
+                        Rescheduled
+                    </option>
+
+                    <option value="Cancelled"
+                        {% if appointment.status == "Cancelled" %}selected{% endif %}>
+                        Cancelled
+                    </option>
+
+                </select>
+
+                <button type="submit" class="update-btn">
+                    Update Status
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <div class="card notification-card">
+
+        <h3>Notify Patient</h3>
+
+        <form
+            action="{{ url_for('send_patient_email', appointment_id=appointment.id) }}"
+            method="POST"
+        >
+
+            <label for="message">
+                Message to Patient
+            </label>
+
+            <textarea
+                id="message"
+                name="message"
+                placeholder="Enter a message for the patient..."
+                required
+                
+            >
+
+            Your appointment has been confirmed.
+            Please arrive at the clinic at 09:00. 
+
+            Send Notification </textarea>
+
+            <button type="submit" class="send-btn">
+                Send Notification
+            </button>
+
+        </form>
+
+         {% with messages = get_flashed_messages(with_categories=true) %}
+
+            {% if messages %}
+
+                {% for category, message in messages %}
+
+                    <div class="flash-message {{ category }}">
+                        {{ message }}
+                    </div>
+
+                {% endfor %}
+
+            {% endif %}
+
+        {% endwith %}
+
+    </div>
+
+</div>
+
+{% endblock %}
+

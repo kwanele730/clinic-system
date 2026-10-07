@@ -1,0 +1,310 @@
+{% extends "logged_base.html" %}
+
+{% block body %}
+
+<style>
+    .form-container {
+        width: 450px;
+        margin: 40px auto;
+        padding: 30px;
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.10);
+    }
+
+    .form-container h2 {
+        text-align: center;
+        margin-bottom: 25px;
+        color: #333;
+    }
+
+    .form-group {
+        margin-bottom: 18px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 7px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #444;
+    }
+
+    .form-group input {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 7px;
+        font-size: 14px;
+        outline: none;
+        transition: 0.2s;
+    }
+
+    .form-group input:focus {
+        border-color: #333;
+        box-shadow: 0 0 4px rgba(0, 0, 0, 0.15);
+    }
+
+    .form-group input.password-error {
+        border-color: #d32f2f;
+    }
+
+    .form-group input.password-success {
+        border-color: #2e7d32;
+    }
+
+    .password-message {
+        display: block;
+        margin-top: 6px;
+        font-size: 13px;
+    }
+
+    .password-message.error {
+        color: #d32f2f;
+    }
+
+    .password-message.success {
+        color: #2e7d32;
+    }
+
+    .add-btn {
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 7px;
+        background: #14284b;
+        color: white;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .add-btn:hover {
+        background: #14284b;
+    }
+
+    .add-btn:disabled {
+        background: #aaa;
+        cursor: not-allowed;
+    }
+
+    .flash-message {
+        width: 450px;
+        box-sizing: border-box;
+        margin: 20px auto;
+        padding: 12px 15px;
+        border-radius: 7px;
+        text-align: center;
+        font-size: 14px;
+    }
+
+    .flash-message.success {
+        background: #e8f5e9;
+        color: #2e7d32;
+        border: 1px solid #a5d6a7;
+    }
+
+    .flash-message.error,
+    .flash-message.danger {
+        background: #ffebee;
+        color: #c62828;
+        border: 1px solid #ef9a9a;
+    }
+
+    @media (max-width: 600px) {
+        .form-container {
+            width: 90%;
+            box-sizing: border-box;
+        }
+
+        .flash-message {
+            width: 90%;
+        }
+    }
+</style>
+
+<div class="form-container">
+
+
+<h2>Add Nurse</h2>
+
+<form action="{{ url_for('add_nurse_details') }}" method="post" id="addUserForm">
+
+    <div class="form-group">
+        <label for="name">Name</label>
+        <input
+            type="text"
+            id="name"
+            name="name"
+            placeholder="Enter your name"
+            required
+        >
+    </div>
+
+
+    <div class="form-group">
+        <label for="surname">Surname</label>
+        <input
+            type="text"
+            id="surname"
+            name="surname"
+            placeholder="Enter your surname"
+            required
+        >
+    </div>
+
+
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="Enter your email"
+            required
+        >
+    </div>
+
+
+    <div class="form-group">
+        <label for="password">Password</label>
+        <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Enter your password"
+            required
+        >
+    </div>
+
+
+    <div class="form-group">
+        <label for="confirm_password">Confirm Password</label>
+
+        <input
+            type="password"
+            id="confirm_password"
+            name="confirm_password"
+            placeholder="Confirm your password"
+            required
+        >
+
+        <span id="passwordMessage" class="password-message"></span>
+    </div>
+
+
+    <div class="form-group">
+        <label for="phone_no">Phone Number</label>
+        <input
+            type="text"
+            id="phone_no"
+            name="phone_no"
+            placeholder="Enter your phone number"
+            required
+        >
+    </div>
+
+
+    <button type="submit" class="add-btn" id="submitBtn">
+        Add nurse
+    </button>
+
+</form>
+
+
+</div>
+
+<!-- FLASH MESSAGES -->
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+
+```
+{% if messages %}
+
+    {% for category, message in messages %}
+
+        <div class="flash-message {{ category }}">
+            {{ message }}
+        </div>
+
+    {% endfor %}
+
+{% endif %}
+```
+
+{% endwith %}
+
+<script>
+
+    const form = document.getElementById("addUserForm");
+
+    const password = document.getElementById("password");
+
+    const confirmPassword = document.getElementById("confirm_password");
+
+    const passwordMessage = document.getElementById("passwordMessage");
+
+    const submitBtn = document.getElementById("submitBtn");
+
+
+    // Check passwords while the user is typing
+    confirmPassword.addEventListener("input", function () {
+
+        if (confirmPassword.value === "") {
+
+            passwordMessage.textContent = "";
+
+            confirmPassword.classList.remove("password-error");
+            confirmPassword.classList.remove("password-success");
+
+            return;
+        }
+
+
+        if (password.value !== confirmPassword.value) {
+
+            passwordMessage.textContent = "Passwords do not match.";
+            passwordMessage.className = "password-message error";
+
+            confirmPassword.classList.add("password-error");
+            confirmPassword.classList.remove("password-success");
+
+            submitBtn.disabled = true;
+
+        } else {
+
+            passwordMessage.textContent = "Passwords match.";
+            passwordMessage.className = "password-message success";
+
+            confirmPassword.classList.add("password-success");
+            confirmPassword.classList.remove("password-error");
+
+            submitBtn.disabled = false;
+        }
+
+    });
+
+
+    // Check again when the form is submitted
+    form.addEventListener("submit", function (event) {
+
+        if (password.value !== confirmPassword.value) {
+
+            event.preventDefault();
+
+            passwordMessage.textContent = "Passwords do not match. Please check again.";
+            passwordMessage.className = "password-message error";
+
+            confirmPassword.classList.add("password-error");
+
+            confirmPassword.focus();
+
+        }
+
+    });
+
+</script>
+
+{% endblock %}
